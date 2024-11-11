@@ -1,0 +1,4 @@
+#!/bin/bash
+file=$1
+size=$(ls -l $file | cut -d' ' -f5)
+dd if=/dev/zero of=$file bs=1 count=$size
