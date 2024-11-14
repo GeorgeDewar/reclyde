@@ -1,8 +1,8 @@
 import sys
 
 # Modes
-REPEAT_MODE = 0
-COPY_MODE = 1
+REPEAT_MODE = 1
+COPY_MODE = 2
 
 castle_offset = 0x958
 castle_length = 0xBE1
@@ -22,6 +22,9 @@ with open(input_filename, "rb") as input_file:
 
     # Open the output file in write binary mode
     with open(output_filename, "wb") as output_file:
+        mode = data[input_idx]
+        input_idx += 1
+
         while input_idx < castle_length:
             # Check if we have reached the end of the compressed data
             if input_idx >= castle_length:
