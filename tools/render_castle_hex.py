@@ -1,6 +1,6 @@
 import sys
 
-input_filename = "extracted/CASTLE.DAT"
+input_filename = sys.argv[1]
 #output_filename = "CASTLE_RENDER.HEX"
 
 width=250
@@ -16,7 +16,10 @@ with open(input_filename, "rb") as input_file:
         byte = data[input_idx]
         input_idx += 1
 
-        print(f"{byte:02X} ", end="")
+        if byte > 1:
+            print(f"{byte:02X} ", end="")
+        else:
+            print("   ", end="")
 
         if input_idx % width == 0:
             print("")
