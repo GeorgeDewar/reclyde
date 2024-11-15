@@ -1,2 +1,0 @@
-#!/bin/bash
-cp ../CLYDE1/$1 ./

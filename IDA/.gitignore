@@ -1,0 +1,5 @@
+# Temporary working files (*.idb is the main database file)
+*.id0
+*.id1
+*.nam
+*.til
