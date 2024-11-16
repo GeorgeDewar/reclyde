@@ -17,6 +17,11 @@ block_height=16
 
 img20 = cv2.imread("extracted/images/red_block.png")
 
+# Temporary: create a color map for all 256 values
+color_map = np.zeros((256, 3), dtype=np.uint8)
+for i in range(256):
+    color_map[i] = [i % 256, (i * 5) % 256, (i * 17) % 256]
+
 with open(castle_structure_filename, "rb") as input_file:
     # Read the castle data
     data = input_file.read()
@@ -35,7 +40,7 @@ with open(castle_structure_filename, "rb") as input_file:
             elif byte > 1:
                 for block_x in range(block_height):
                     for block_y in range(block_width):
-                        img[x*block_width + block_x,y*block_height + block_y] = [255,255,255]
+                        img[x*block_width + block_x,y*block_height + block_y] = color_map[byte]
 
     cv2.imwrite(output_filename, img)
 
