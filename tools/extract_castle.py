@@ -83,3 +83,11 @@ with open(input_filename, "rb") as input_file:
     unknown_length = int.from_bytes(data[0x44:0x46], 'little')
     unknown_filename = f"extracted/castle{castle_num}_unknown.bin"
     decompress_castle(data[unknown_offset:unknown_offset+unknown_length], output_length, unknown_filename)
+
+    # Castle 2 items - includes gems, energy, decorations
+    castle_num = 2
+    castle_offset = unknown_offset + unknown_length
+    items_offset = castle_offset
+    items_length = int.from_bytes(data[0x46:0x48], 'little')
+    items_filename = f"extracted/castle{castle_num}_items.bin"
+    decompress_castle(data[items_offset:items_offset+items_length], 390000, items_filename)
