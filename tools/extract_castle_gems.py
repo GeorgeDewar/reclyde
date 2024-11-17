@@ -4,9 +4,9 @@ import sys
 REPEAT_MODE = 1
 COPY_MODE = 2
 
-castle_offset = 0x958
-castle_length = 0xBE1
-output_length = 45000 # stop with error if we exceed this length
+castle_offset = 0x0958
+castle_length = 0x0BE1 # Found at 0x40 in VOLUME_4.CA1
+output_length = 0xAFC8 # stop with error if we exceed this length
 
 input_filename = "VOLUME_4.CA1"
 output_filename = "CASTLE.DAT"

@@ -5,8 +5,8 @@ REPEAT_MODE = 1
 COPY_MODE = 2
 
 castle_offset = 0x1539
-castle_length = 0x66D
-output_length = 45000 # stop with error if we exceed this length
+castle_length = 0x066D # Found at 0x42 in VOLUME_4.CA1
+output_length = 0xAFC8 # stop with error if we exceed this length
 
 input_filename = "working/VOLUME_4.CA1"
 output_filename = "extracted/CASTLE_STR.DAT"
