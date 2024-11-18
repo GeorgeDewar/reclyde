@@ -17,6 +17,7 @@ block_width=16
 block_height=16
 
 img20 = cv2.imread("extracted/images/red_block.png")
+img6C = cv2.imread("extracted/images/gold.png")
 
 # Temporary: create a color map for all 256 values
 color_map = np.zeros((256, 3), dtype=np.uint8)
@@ -38,6 +39,8 @@ with open(castle_structure_filename, "rb") as input_file:
 
             if byte == 0x20:
                 img[x*block_width:x*block_width+block_width, y*block_height:y*block_height+block_height] = img20
+            elif byte == 0x6C:
+                img[x*block_width:x*block_width+block_width, y*block_height:y*block_height+block_height] = img6C
             elif byte > 1:
                 for block_x in range(block_height):
                     for block_y in range(block_width):

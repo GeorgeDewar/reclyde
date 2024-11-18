@@ -1,20 +1,10 @@
-import sys
-
 # Modes
 REPEAT_MODE = 1
 COPY_MODE = 2
 
-castle_offset = 0x0958
-castle_length = 0x0BE1 # Found at 0x40 in VOLUME_4.CA1
-output_length = 0xAFC8 # stop with error if we exceed this length
-
-input_filename = "VOLUME_4.CA1"
-output_filename = "CASTLE.DAT"
-
-with open(input_filename, "rb") as input_file:
-    # Read the compressed castle data
-    input_file.seek(castle_offset)
-    data = input_file.read(castle_length)
+def decompress_castle_data(data, output_length, output_filename):
+    input_length = len(data)
+    print(f"Decompressing {input_length} bytes to {output_length} bytes")
 
     input_idx = 0
     output_idx = 0
@@ -25,14 +15,14 @@ with open(input_filename, "rb") as input_file:
         mode = data[input_idx]
         input_idx += 1
 
-        while input_idx < castle_length:
+        while input_idx < input_length:
             # Check if we have reached the end of the compressed data
-            if input_idx >= castle_length:
+            if input_idx >= output_length:
                 break
             
             # Check if we have reached the end of the output data
             if output_idx >= output_length:
-                raise ValueError(f"Output length exceeded (only read %d of %d input bytes)" % (input_idx, castle_length))
+                raise ValueError(f"Output length exceeded (only read %d of %d input bytes)" % (input_idx, input_length))
 
             # Read the next byte from the compressed data
             byte = data[input_idx]
@@ -60,5 +50,8 @@ with open(input_filename, "rb") as input_file:
             
             # Switch the mode
             mode = REPEAT_MODE if mode == COPY_MODE else COPY_MODE
+
+        if output_idx != output_length:
+            raise ValueError(f"Only wrote %d of %d expected output bytes)" % (output_idx, output_length))
 
         print("Extraction complete; wrote %d bytes to %s" % (output_idx, output_filename))
