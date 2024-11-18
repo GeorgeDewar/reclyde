@@ -1,7 +1,7 @@
 import sys
 
 from PIL import Image
-input_filename = "tmp/castleImagesMem.bin"
+input_filename = "extracted/castle_images.bin"
 output_dir = "tmp/img"
 
 num_images = 250

@@ -3,7 +3,6 @@ from decompress import decompress_castle_data
 
 castle_num = int(sys.argv[1])
 
-castle_offset = 0x0958 # Offset to first castle data - the rest follow contiguously
 output_length = 0xAFC8 # for castle 1, or maybe all castles
 
 input_filename = "working/VOLUME_4.CA1"
