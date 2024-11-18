@@ -2,9 +2,10 @@ import sys
 import numpy as np
 import cv2
 
-castle_structure_filename = "extracted/castle1_structure.bin"
-castle_items_filename = "extracted/castle1_items.bin"
-output_filename = "render/castle1.png"
+castle_num = sys.argv[1]
+castle_structure_filename = f"extracted/castle{castle_num}_structure.bin"
+castle_items_filename = f"extracted/castle{castle_num}_items.bin"
+output_filename = f"render/castle{castle_num}.png"
 
 # Dimensions of the castle in blocks
 blocks_width=250

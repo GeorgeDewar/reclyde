@@ -90,23 +90,25 @@ def extract_castle(castle_idx):
     #
     # Decompress the three parts
     #
+
+    castle_size_offset = 0x40 + (castle_idx * 6)
     
     # Castle items - includes gems, energy, decorations
     items_offset = castle_data_start
-    items_length = read_word(data, start_addr_loc + 0x40)
+    items_length = read_word(data, castle_size_offset)
     print(f"Items length: {items_length}")
     items_filename = f"extracted/castle{castle_num}_items.bin"
     decompress_castle_data(data[items_offset:items_offset+items_length], output_length, items_filename)
 
     # Castle structure - includes walls, floors
     structure_offset = items_offset + items_length
-    structure_length = read_word(data, start_addr_loc + 0x42)
+    structure_length = read_word(data, castle_size_offset + 2)
     structure_filename = f"extracted/castle{castle_num}_structure.bin"
     decompress_castle_data(data[structure_offset:structure_offset+structure_length], output_length, structure_filename)
 
     # Not sure what this one is yet
     unknown_offset = structure_offset + structure_length
-    unknown_length = read_word(data, start_addr_loc + 0x44)
+    unknown_length = read_word(data, castle_size_offset + 4)
     unknown_filename = f"extracted/castle{castle_num}_unknown.bin"
     decompress_castle_data(data[unknown_offset:unknown_offset+unknown_length], output_length, unknown_filename)
 
