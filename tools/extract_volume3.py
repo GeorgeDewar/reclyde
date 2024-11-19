@@ -14,9 +14,15 @@ def extract_volume3():
     print(f"Image data start: 0x{image_data_start:02x}")
 
     # Decompress the data
+    offset = image_data_start
     input_length = read_word(data, 8)
-    output_filename = f"extracted/castle_images.bin"
-    decompress_castle_data(data[image_data_start:image_data_start+input_length], output_length, output_filename)
+    output_filename = f"extracted/castle_images_items.bin"
+    decompress_castle_data(data[offset:offset+input_length], output_length, output_filename)
+
+    offset += input_length
+    input_length = read_word(data, 10)
+    output_filename = f"extracted/castle_images_structure.bin"
+    decompress_castle_data(data[offset:offset+input_length], output_length, output_filename)
 
 with open(input_filename, "rb") as input_file:
     # Read the compressed castle data

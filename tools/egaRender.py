@@ -40,7 +40,7 @@ def ega_render_mode_0x0D(video_memory):
 
 
 # Load the video memory (replace with your file path)
-with open("extracted/castle_images.bin", "rb") as f:
+with open("extracted/castle_images_structure.bin", "rb") as f:
     video_memory = f.read()
 
 # Render the image for mode 0x0D
