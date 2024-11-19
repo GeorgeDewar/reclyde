@@ -36,18 +36,17 @@ with open(castle_structure_filename, "rb") as structure_file:
 
         for x in range(blocks_height):
             for y in range(blocks_width):
+                # Draw items
                 byte = items_data[input_idx]
                 if byte != 0:
                     img[x*block_width:x*block_width+block_width, y*block_height:y*block_height+block_height] = items[byte]
 
-
+                # Draw structure
                 byte = structure_data[input_idx]
                 if byte != 0:
                     img[x*block_width:x*block_width+block_width, y*block_height:y*block_height+block_height] = structure[byte]
 
-
                 input_idx += 1
-
 
         cv2.imwrite(output_filename, img)
 
