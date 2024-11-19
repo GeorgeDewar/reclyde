@@ -18,7 +18,7 @@ block_height=16
 
 structure = {}
 for i in range(240):
-    structure[i] = cv2.imread(f"tmp/img/structure/{i:02x}.png")
+    structure[i] = cv2.imread(f"extracted/images/structure/{i:02x}.png")
 
 with open(castle_structure_filename, "rb") as input_file:
     # Read the castle data

@@ -1,7 +1,7 @@
 import cv2
 
-input_filename = "extracted/images/castle_structure_images.png"
-output_dir = "tmp/img/structure"
+input_filename = "extracted/images/castle_items_images.png"
+output_dir = "extracted/images/items"
 
 img_width = 16
 img_height = 16
