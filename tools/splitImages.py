@@ -4,11 +4,15 @@ from PIL import Image
 input_filename = "extracted/castle_images.bin"
 output_dir = "tmp/img"
 
-num_images = 250
-img_size = 128
+num_images = 62
 
-img_width = 16
-img_height = 16
+
+img_width = 32
+img_height = 32
+bpp = 4
+img_size = int(img_width * img_height * bpp / 8)
+
+print(f"Extracting {img_width}x{img_height}x{bpp}bpp images of {img_size} bytes each")
 
 # Define the CGA palette (RGB tuples)
 CGA_PALETTE = [
