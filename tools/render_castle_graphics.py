@@ -2,6 +2,10 @@ import sys
 import numpy as np
 import cv2
 
+MAGIC_NONE = 0x00
+MAGIC_ANIM1 = 0x03
+MAGIC_ANIM2 = 0x61
+
 castle_num = sys.argv[1]
 castle_structure_filename = f"extracted/castle{castle_num}_structure.bin"
 castle_items_filename = f"extracted/castle{castle_num}_items.bin"
@@ -39,6 +43,13 @@ input_idx = 0
 # create the data behind our output image
 img = np.zeros((blocks_height * block_height, blocks_width * block_width, 3),np.uint8)
 
+def print_byte_hex(x, y, byte):
+    scale = 0.3
+    color = (255, 255, 255)
+    thickness = 1
+    offset = 4
+    cv2.putText(img, f"{byte:02x}", [y*block_width + offset, x*block_height + offset], cv2.FONT_HERSHEY_SIMPLEX, scale, color, thickness)
+
 for x in range(blocks_height):
     for y in range(blocks_width):
         # Draw items
@@ -50,6 +61,11 @@ for x in range(blocks_height):
         byte = structure_data[input_idx]
         if byte != 0:
             img[x*block_width:x*block_width+block_width, y*block_height:y*block_height+block_height] = structure[byte]
+
+        # Draw magic
+        byte = magic_data[input_idx]
+        if byte not in [MAGIC_NONE, MAGIC_ANIM1, MAGIC_ANIM2]:
+            print_byte_hex(x, y, byte)
 
         input_idx += 1
 
