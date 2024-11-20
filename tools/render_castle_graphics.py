@@ -4,10 +4,15 @@ import cv2
 
 ITEM_HOLE = 0x00
 ITEM_NOTHING = 0x01 # Plain blue background
+ITEM_ENERGY = 0x36
+
+STRUCTURE_NONE = 0x00
 
 MAGIC_NONE = 0x00
-MAGIC_ANIM1 = 0x03
-MAGIC_ANIM2 = 0x61
+MAGIC_ANIM_02 = 0x02
+MAGIC_ANIM_03 = 0x03
+MAGIC_ANIM_60 = 0x60
+MAGIC_ANIM_61 = 0x61
 
 castle_num = sys.argv[1]
 castle_structure_filename = f"extracted/castle{castle_num}_structure.bin"
@@ -46,6 +51,9 @@ input_idx = 0
 # create the data behind our output image
 img = np.zeros((blocks_height * block_height, blocks_width * block_width, 3),np.uint8)
 
+def print_image(x, y, image):
+    img[x*block_width:x*block_width+block_width, y*block_height:y*block_height+block_height] = image
+
 def print_byte_hex(x, y, byte):
     scale = 0.3
     color = (255, 255, 255)
@@ -62,18 +70,20 @@ for x in range(blocks_height):
         byte = items_data[input_idx]
         if byte not in [ITEM_HOLE, ITEM_NOTHING]:
             row_has_content = True
-        if byte != ITEM_HOLE:
-            img[x*block_width:x*block_width+block_width, y*block_height:y*block_height+block_height] = items[byte]
+        if byte == ITEM_ENERGY: # draw a different frame of the animation, otherwise it looks dull
+            print_image(x, y, items[byte + 2])
+        elif byte not in [ITEM_HOLE]:
+            print_image(x, y, items[byte])
 
         # Draw structure
         byte = structure_data[input_idx]
-        if byte != 0:
+        if byte not in [STRUCTURE_NONE]:
             row_has_content = True
-            img[x*block_width:x*block_width+block_width, y*block_height:y*block_height+block_height] = structure[byte]
+            print_image(x, y, structure[byte])
 
         # Draw magic
         byte = magic_data[input_idx]
-        if byte not in [MAGIC_NONE, MAGIC_ANIM1, MAGIC_ANIM2]:
+        if byte not in [MAGIC_NONE, MAGIC_ANIM_02, MAGIC_ANIM_03, MAGIC_ANIM_60, MAGIC_ANIM_61]:
             row_has_content = True
             print_byte_hex(x, y, byte)
 
@@ -82,7 +92,6 @@ for x in range(blocks_height):
     if row_has_content and first_content is None:
         first_content = x
 
-print(f"First content found in row {first_content}")
 img = img[first_content*block_height:blocks_height * block_height, 0:blocks_width * block_width]
 
 cv2.imwrite(output_filename, img)
