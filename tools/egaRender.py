@@ -40,7 +40,7 @@ def ega_render_mode_0x0D(video_memory):
 
 
 # Load the video memory (replace with your file path)
-with open("extracted/castle_images_items.bin", "rb") as f:
+with open("extracted/castle_background.bin", "rb") as f:
     video_memory = f.read()
 
 # Render the image for mode 0x0D
@@ -74,5 +74,5 @@ for color_index, (r, g, b) in enumerate(ega_palette):
 
 # Save and display the image
 img = Image.fromarray(rgb_image)
-img.save("tmp/ega_render_mode_0x0D.png")
+img.save("tmp/ega_background.png")
 img.show()
