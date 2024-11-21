@@ -20,10 +20,6 @@ def decompress_castle_data(data, output_length, output_filename):
             if input_idx >= output_length:
                 break
             
-            # Check if we have reached the end of the output data
-            if output_idx >= output_length:
-                raise ValueError(f"Output length exceeded (only read %d of %d input bytes)" % (input_idx, input_length))
-
             # Read the next byte from the compressed data
             byte = data[input_idx]
             input_idx += 1
@@ -35,12 +31,21 @@ def decompress_castle_data(data, output_length, output_filename):
                     byte = data[input_idx]
                     input_idx += 1
                     for _ in range(count):
+                        # Check if we have reached the end of the output data
+                        if output_idx >= output_length:
+                            raise ValueError(f"Output length exceeded (only read %d of %d input bytes)" % (input_idx, input_length))
+                                    
                         output_file.write(bytes([byte]))
                         output_idx += 1
                 elif mode == COPY_MODE:
                     # Copy N bytes from the compressed data
                     count = byte
                     for _ in range(count):
+                        if input_idx >= input_length:
+                            raise ValueError(f"Input length overrun during copy (only wrote %d of %d output bytes)" % (output_idx, output_length))
+                        if output_idx >= output_length:
+                            raise ValueError(f"Output length exceeded (only read %d of %d input bytes)" % (input_idx, input_length))
+
                         byte = data[input_idx]
                         input_idx += 1
                         output_file.write(bytes([byte]))
