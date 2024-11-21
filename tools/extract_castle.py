@@ -48,7 +48,7 @@ def extract_castle(castle_idx):
     structure_filename = f"extracted/castle{castle_num}_structure.bin"
     decompress_castle_data(data[structure_offset:structure_offset+structure_length], output_length, structure_filename)
 
-    # Not sure what this one is yet
+    # Animation data and magic
     unknown_offset = structure_offset + structure_length
     unknown_length = read_word(data, castle_size_offset + 4)
     unknown_filename = f"extracted/castle{castle_num}_unknown.bin"

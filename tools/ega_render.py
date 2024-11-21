@@ -1,6 +1,27 @@
 import numpy as np
 from PIL import Image
 
+# Map EGA palette (16 colors) to RGB
+ega_palette = [
+    (0, 0, 0),       # Black
+    (0, 0, 170),     # Blue
+    (0, 170, 0),     # Green
+    (0, 170, 170),   # Cyan
+    (170, 0, 0),     # Red
+    (170, 0, 170),   # Magenta
+    (170, 85, 0),    # Brown
+    (170, 170, 170), # Light Gray
+    (85, 85, 85),    # Dark Gray
+    (85, 85, 255),   # Light Blue
+    (85, 255, 85),   # Light Green
+    (85, 255, 255),  # Light Cyan
+    (255, 85, 85),   # Light Red
+    (255, 85, 255),  # Light Magenta
+    (255, 255, 85),  # Yellow
+    (255, 255, 255), # White
+]
+
+# Render binary video memory data for mode 0x0D (320x200x16) to an image
 def ega_render_mode_0x0D(video_memory):
     width, height = 320, 200
     bytes_per_row = width // 8  # Each byte covers 8 pixels
@@ -38,41 +59,20 @@ def ega_render_mode_0x0D(video_memory):
 
     return image_data
 
+def ega_render(input_filename, output_filename):
+    # Load the video memory (replace with your file path)
+    with open(input_filename, "rb") as f:
+        video_memory = f.read()
 
-# Load the video memory (replace with your file path)
-with open("extracted/castle_background.bin", "rb") as f:
-    video_memory = f.read()
+    # Render the image for mode 0x0D
+    ega_image = ega_render_mode_0x0D(video_memory)
 
-# Render the image for mode 0x0D
-ega_image = ega_render_mode_0x0D(video_memory)
+    # Convert to RGB image
+    height, width = ega_image.shape
+    rgb_image = np.zeros((height, width, 3), dtype=np.uint8)
+    for color_index, (r, g, b) in enumerate(ega_palette):
+        rgb_image[ega_image == color_index] = (r, g, b)
 
-# Map EGA palette (16 colors) to RGB
-ega_palette = [
-    (0, 0, 0),       # Black
-    (0, 0, 170),     # Blue
-    (0, 170, 0),     # Green
-    (0, 170, 170),   # Cyan
-    (170, 0, 0),     # Red
-    (170, 0, 170),   # Magenta
-    (170, 85, 0),    # Brown
-    (170, 170, 170), # Light Gray
-    (85, 85, 85),    # Dark Gray
-    (85, 85, 255),   # Light Blue
-    (85, 255, 85),   # Light Green
-    (85, 255, 255),  # Light Cyan
-    (255, 85, 85),   # Light Red
-    (255, 85, 255),  # Light Magenta
-    (255, 255, 85),  # Yellow
-    (255, 255, 255), # White
-]
-
-# Convert to RGB image
-height, width = ega_image.shape
-rgb_image = np.zeros((height, width, 3), dtype=np.uint8)
-for color_index, (r, g, b) in enumerate(ega_palette):
-    rgb_image[ega_image == color_index] = (r, g, b)
-
-# Save and display the image
-img = Image.fromarray(rgb_image)
-img.save("tmp/ega_background.png")
-img.show()
+    # Save the image
+    img = Image.fromarray(rgb_image)
+    img.save(output_filename)
