@@ -29,6 +29,10 @@ blocks_len = blocks_width * blocks_height
 block_width=16
 block_height=16
 
+# Output image size
+output_height=blocks_height*block_height
+output_width=blocks_width*block_width
+
 structure = {}
 for i in range(240):
     structure[i] = cv2.imread(f"extracted/images/structure/{i:02x}.png")
@@ -50,6 +54,10 @@ input_idx = 0
 
 # create the data behind our output image
 img = np.zeros((blocks_height * block_height, blocks_width * block_width, 3),np.uint8)
+
+# Read and apply background image
+bg_image = cv2.imread("original/sky1.jpg")
+img[612:2880, 0:output_width] = bg_image[0:2268, 0:output_width]
 
 def print_image(x, y, image):
     img[x*block_width:x*block_width+block_width, y*block_height:y*block_height+block_height] = image
