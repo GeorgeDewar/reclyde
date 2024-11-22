@@ -1,14 +1,12 @@
 import sys
 from decompress import decompress_castle_data
+from util import read_word
 
 castle_num = int(sys.argv[1])
 
 output_length = 0xAFC8 # for castle 1, or maybe all castles
 
 input_filename = "working/VOLUME_4.CA1"
-
-def read_word(data, location):
-    return int.from_bytes(data[location:location+2], 'little')
 
 def extract_castle(castle_idx):
     castle_num = castle_idx + 1
