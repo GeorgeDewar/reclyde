@@ -10,7 +10,7 @@ def read_word(data, location):
 
 def extract_image(name, input_length):
     global offset
-    bin_filename = f"extracted/{name}.bin"
+    bin_filename = f"extracted/volume6_playing_instructions/{name}.bin"
     render_filename = f"extracted/images/{name}.png"
     decompress_castle_data(data[offset:offset+input_length], output_length, bin_filename)
     ega_render(bin_filename, render_filename)

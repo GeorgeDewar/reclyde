@@ -17,14 +17,14 @@ def extract_volume3():
     # Decompress the data
     offset = image_data_start
     input_length = read_word(data, 8)
-    bin_filename = f"extracted/castle_items_images.bin"
+    bin_filename = f"extracted/volume3_castle_sprites/castle_items_images.bin"
     render_filename = "extracted/images/castle_items_images.png"
     decompress_castle_data(data[offset:offset+input_length], output_length, bin_filename)
     ega_render(bin_filename, render_filename)
 
     offset += input_length
     input_length = read_word(data, 10)
-    bin_filename = f"extracted/castle_structure_images.bin"
+    bin_filename = f"extracted/volume3_castle_sprites/castle_structure_images.bin"
     render_filename = "extracted/images/castle_structure_images.png"
     decompress_castle_data(data[offset:offset+input_length], output_length, bin_filename)
     ega_render(bin_filename, render_filename)

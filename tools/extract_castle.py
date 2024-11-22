@@ -39,19 +39,19 @@ def extract_castle(castle_idx):
     items_offset = castle_data_start
     items_length = read_word(data, castle_size_offset)
     print(f"Items length: {items_length}")
-    items_filename = f"extracted/castle{castle_num}_items.bin"
+    items_filename = f"extracted/volume4_castles/castle{castle_num}_items.bin"
     decompress_castle_data(data[items_offset:items_offset+items_length], output_length, items_filename)
 
     # Castle structure - includes walls, floors
     structure_offset = items_offset + items_length
     structure_length = read_word(data, castle_size_offset + 2)
-    structure_filename = f"extracted/castle{castle_num}_structure.bin"
+    structure_filename = f"extracted/volume4_castles/castle{castle_num}_structure.bin"
     decompress_castle_data(data[structure_offset:structure_offset+structure_length], output_length, structure_filename)
 
     # Animation data and magic
     unknown_offset = structure_offset + structure_length
     unknown_length = read_word(data, castle_size_offset + 4)
-    unknown_filename = f"extracted/castle{castle_num}_unknown.bin"
+    unknown_filename = f"extracted/volume4_castles/castle{castle_num}_magic.bin"
     decompress_castle_data(data[unknown_offset:unknown_offset+unknown_length], output_length, unknown_filename)
 
 with open(input_filename, "rb") as input_file:
