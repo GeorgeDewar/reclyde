@@ -16,10 +16,6 @@ def decompress_castle_data(data, output_length, output_filename):
         input_idx += 1
 
         while input_idx < input_length:
-            # Check if we have reached the end of the compressed data
-            if input_idx >= output_length:
-                break
-            
             # Read the next byte from the compressed data
             byte = data[input_idx]
             input_idx += 1

@@ -1,4 +1,5 @@
-from util import read_word
+from util import read_word, write_word
+from compress import compress_data
 
 # We use the original file to get some header data
 orig_filename = "orig/VOLUME_4.CA1"
@@ -34,8 +35,16 @@ with open(output_filename, "wb") as output_file:
     
     # Castle items - includes gems, energy, decorations
     offset = castle_data_start
-    compressed_length = read_word(orig_data, castle_size_offset)
-    output_file.write(orig_data[offset:offset+compressed_length])
+    #compressed_length = read_word(orig_data, castle_size_offset)
+    with open(f"{input_dir}/castle1_items.bin", "rb") as input_file:
+        uncompressed_data = input_file.read()
+    compressed_length = compress_data(uncompressed_data, output_file)
+    #output_file.write(orig_data[offset:offset+compressed_length])
+    print(f"Compressed length: {compressed_length}")
+    # Write the compressed length to the header
+    output_file.seek(castle_size_offset)
+    output_file.write(write_word(compressed_length))
+    output_file.seek(0, 2) # seek back to end
 
     # Castle structure - includes walls, floors
     offset = offset + compressed_length
