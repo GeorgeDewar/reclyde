@@ -19,7 +19,6 @@ def compress_data(data, output_stream):
     remainder = input_length - full_copies * 255
 
     for i in range(full_copies):
-        print(f"Writing 255 bytes")
         output_stream.write(bytes([0xFF])) # Copy of 255 bytes
         output_idx += 1
         output_stream.write(data[input_idx:input_idx+255])
