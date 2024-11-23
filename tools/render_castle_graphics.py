@@ -15,9 +15,9 @@ MAGIC_ANIM_60 = 0x60
 MAGIC_ANIM_61 = 0x61
 
 castle_num = sys.argv[1]
-castle_structure_filename = f"extracted/castle{castle_num}_structure.bin"
-castle_items_filename = f"extracted/castle{castle_num}_items.bin"
-castle_magic_filename = f"extracted/castle{castle_num}_unknown.bin"
+castle_structure_filename = f"extracted/volume4_castles/castle{castle_num}_structure.bin"
+castle_items_filename = f"extracted/volume4_castles/castle{castle_num}_items.bin"
+castle_magic_filename = f"extracted/volume4_castles/castle{castle_num}_magic.bin"
 output_filename = f"render/castle{castle_num}.png"
 
 # Dimensions of the castle in blocks
