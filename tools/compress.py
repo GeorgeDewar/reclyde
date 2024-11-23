@@ -17,7 +17,6 @@ def compress_data(data, output_stream):
     # Calculate the number of 255-bytes copies, and the remainder
     full_copies = input_length // 255
     remainder = input_length - full_copies * 255
-    print(f"Writing {full_copies} x 255 bytes, and 1 x {remainder} bytes")
 
     for i in range(full_copies):
         print(f"Writing 255 bytes")
@@ -29,7 +28,6 @@ def compress_data(data, output_stream):
         output_stream.write(bytes([0])) # Keep the mode the same
         output_idx += 1
 
-    print(f"Writing final {remainder} bytes")
     output_stream.write(bytes([remainder])) # Copy of [remainder] bytes
     output_idx += 1
     output_stream.write(data[input_idx:input_idx+remainder])
@@ -37,4 +35,3 @@ def compress_data(data, output_stream):
     output_idx += remainder
 
     return output_idx
-

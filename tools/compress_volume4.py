@@ -10,7 +10,7 @@ input_dir = "extracted/volume4_castles"
 with open(orig_filename, "rb") as input_file:
     orig_data = input_file.read()
 
-with open(output_filename, "wb") as output_file:
+with open(output_filename, "w+b") as output_file:
     # Copy overall file header(s)
     file_header_length = 0xd0
     output_file.write(orig_data[0:file_header_length])
@@ -34,12 +34,9 @@ with open(output_filename, "wb") as output_file:
     castle_size_offset = 0x40 + (castle_idx * 6)
     
     # Castle items - includes gems, energy, decorations
-    offset = castle_data_start
-    #compressed_length = read_word(orig_data, castle_size_offset)
     with open(f"{input_dir}/castle1_items.bin", "rb") as input_file:
         uncompressed_data = input_file.read()
     compressed_length = compress_data(uncompressed_data, output_file)
-    #output_file.write(orig_data[offset:offset+compressed_length])
     print(f"Compressed length: {compressed_length}")
     # Write the compressed length to the header
     output_file.seek(castle_size_offset)
@@ -47,11 +44,21 @@ with open(output_filename, "wb") as output_file:
     output_file.seek(0, 2) # seek back to end
 
     # Castle structure - includes walls, floors
-    offset = offset + compressed_length
-    compressed_length = read_word(orig_data, castle_size_offset + 2)
-    output_file.write(orig_data[offset:offset+compressed_length])
+    with open(f"{input_dir}/castle1_structure.bin", "rb") as input_file:
+        uncompressed_data = input_file.read()
+    compressed_length = compress_data(uncompressed_data, output_file)
+    print(f"Compressed length: {compressed_length}")
+    # Write the compressed length to the header
+    output_file.seek(castle_size_offset + 2)
+    output_file.write(write_word(compressed_length))
+    output_file.seek(0, 2) # seek back to end
 
     # Animation data and magic
-    offset = offset + compressed_length
-    compressed_length = read_word(orig_data, castle_size_offset + 4)
-    output_file.write(orig_data[offset:offset+compressed_length])
+    with open(f"{input_dir}/castle1_magic.bin", "rb") as input_file:
+        uncompressed_data = input_file.read()
+    compressed_length = compress_data(uncompressed_data, output_file)
+    print(f"Compressed length: {compressed_length}")
+    # Write the compressed length to the header
+    output_file.seek(castle_size_offset + 4)
+    output_file.write(write_word(compressed_length))
+    output_file.seek(0, 2) # seek back to end
