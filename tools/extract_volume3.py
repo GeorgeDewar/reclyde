@@ -1,6 +1,7 @@
 import sys
 from decompress import decompress_castle_data
 from ega_render import ega_render
+from splitImages import split_images
 
 output_length = 0x7D00 # 32,000 bytes
 
@@ -21,6 +22,7 @@ def extract_volume3():
     render_filename = "extracted/images/castle_items_images.png"
     decompress_castle_data(data[offset:offset+input_length], output_length, bin_filename)
     ega_render(bin_filename, render_filename)
+    split_images(render_filename, f"extracted/images/items/")
 
     offset += input_length
     input_length = read_word(data, 10)
@@ -28,6 +30,7 @@ def extract_volume3():
     render_filename = "extracted/images/castle_structure_images.png"
     decompress_castle_data(data[offset:offset+input_length], output_length, bin_filename)
     ega_render(bin_filename, render_filename)
+    split_images(render_filename, f"extracted/images/structure/")
 
 with open(input_filename, "rb") as input_file:
     # Read the compressed castle data

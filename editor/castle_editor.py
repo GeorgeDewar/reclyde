@@ -9,6 +9,10 @@ import numpy as np
 HOME=".."
 castle_num = 1
 
+available_items = {
+    ""
+}
+
 class CastleEditorWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()

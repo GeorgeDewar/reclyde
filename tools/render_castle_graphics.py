@@ -34,12 +34,12 @@ output_height=blocks_height*block_height
 output_width=blocks_width*block_width
 
 structure = {}
-for i in range(240):
-    structure[i] = cv2.imread(f"extracted/images/structure/{i:02x}.png")
+for i in range(200):
+    structure[i] = cv2.imread(f"extracted/images/structure/{i:03}.png")
 
 items = {}
-for i in range(240):
-    items[i] = cv2.imread(f"extracted/images/items/{i:02x}.png")
+for i in range(200):
+    items[i] = cv2.imread(f"extracted/images/items/{i:03}.png")
 
 # Read the castle data
 with open(castle_structure_filename, "rb") as structure_file:

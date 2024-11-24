@@ -32,12 +32,12 @@ HOME=".."
 class CastleRenderer:
     def __init__(self):
         self.structure_sprites = {}
-        for i in range(240):
-            self.structure_sprites[i] = cv2.imread(f"{HOME}/extracted/images/structure/{i:02x}.png")
+        for i in range(200):
+            self.structure_sprites[i] = cv2.imread(f"{HOME}/extracted/images/structure/{i:03}.png")
 
         self.item_sprites = {}
-        for i in range(240):
-            self.item_sprites[i] = cv2.imread(f"{HOME}/extracted/images/items/{i:02x}.png")
+        for i in range(200):
+            self.item_sprites[i] = cv2.imread(f"{HOME}/extracted/images/items/{i:03}.png")
 
     def render(self, structure_data, items_data, magic_data):
         # Keep track of where we are - same index for all three files
