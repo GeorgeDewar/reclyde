@@ -22,6 +22,7 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.setLayout(self.layout)
 
         self.button.clicked.connect(self.magic)
+        self.display_image()
 
     def display_image(self):
         image = self.castle_renderer.render()
@@ -36,7 +37,8 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
     widget = CastleEditorWindow()
-    widget.resize(800, 600)
+    widget.setWindowTitle("Clyde's Unofficial Castle Editor")
+    widget.resize(1320, 900)
     widget.show()
 
     sys.exit(app.exec_())

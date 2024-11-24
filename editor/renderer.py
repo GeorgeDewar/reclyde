@@ -77,7 +77,6 @@ class CastleRenderer:
             offset = 4
             cv2.putText(img, f"{byte:02x}", [y*block_width + offset, x*block_height + offset], cv2.FONT_HERSHEY_SIMPLEX, scale, color, thickness)
 
-        first_content = None
         for x in range(blocks_height):
             row_has_content = False # if there's nothing in the row we can drop it from the output
 
@@ -105,9 +104,5 @@ class CastleRenderer:
 
                 input_idx += 1
 
-            if row_has_content and first_content is None:
-                first_content = x
-
-        img = img[first_content*block_height:blocks_height * block_height, 0:blocks_width * block_width]
         return img
     
