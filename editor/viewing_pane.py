@@ -55,7 +55,7 @@ class ViewingPane(QtWidgets.QGraphicsView):
             self._photo.setPixmap(QtGui.QPixmap())
         if not (self.zoomPinned() and self.hasPhoto()):
             self._zoom = 0
-        self.resetView(SCALE_FACTOR ** self._zoom)
+        #self.resetView(SCALE_FACTOR ** self._zoom)
 
     def zoomLevel(self):
         return self._zoom

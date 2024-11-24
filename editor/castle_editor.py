@@ -3,6 +3,8 @@ import random
 from PySide2 import QtCore, QtWidgets, QtGui
 from renderer import CastleRenderer
 from viewing_pane import ViewingPane
+import cv2
+import numpy as np
 
 class CastleEditorWindow(QtWidgets.QWidget):
     def __init__(self):
@@ -12,6 +14,7 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.image_frame = ViewingPane(self)
         self.image_frame.coordinatesChanged.connect(self.handleCoords)
         self.labelCoords = QtWidgets.QLabel(self)
+        self.gameCoords = QtWidgets.QLabel(self)
         # self.labelCoords.setAlignment(
         #     QtCore.Qt.AlignRight | QtCore.Qt.AlignCenter)
 
@@ -22,6 +25,7 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.rightMenu = QtWidgets.QVBoxLayout()
         self.rightMenu.addWidget(self.button)
         self.rightMenu.addStretch()
+        self.rightMenu.addWidget(self.gameCoords)
         self.rightMenu.addWidget(self.labelCoords)
         rightMenuLayout.setLayout(self.rightMenu)
 
@@ -34,15 +38,34 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.display_image()
 
     def display_image(self):
-        image = self.castle_renderer.render()
-        qimage = QtGui.QImage(image.data, image.shape[1], image.shape[0], QtGui.QImage.Format_RGB888).rgbSwapped()
+        self.image = self.castle_renderer.render()
+        qimage = QtGui.QImage(self.image.data, self.image.shape[1], self.image.shape[0], QtGui.QImage.Format_RGB888).rgbSwapped()
         self.image_frame.setPhoto(QtGui.QPixmap.fromImage(qimage))
 
     def handleCoords(self, point):
         if not point.isNull():
             self.labelCoords.setText(f'Rendered coords: {point.x()}, {point.y()}')
+            game_x = point.x() // 16
+            game_y = point.y() // 16
+            self.gameCoords.setText(f'Game coords: {game_x}, {game_y}')
+
+            # Show highlight
+            highlight = (game_x, game_y)
+            
+            top_left = np.multiply(highlight, 16)
+            # Blue color in BGR
+            color = (255, 0, 0)
+
+            # Line thickness of 2 px
+            thickness = 2
+
+            img2 = self.image.copy()
+            cv2.rectangle(img2, top_left, np.add(top_left, 16), color, thickness)
+            qimage = QtGui.QImage(img2.data, img2.shape[1], img2.shape[0], QtGui.QImage.Format_RGB888).rgbSwapped()
+            self.image_frame.setPhoto(QtGui.QPixmap.fromImage(qimage))
         else:
-            self.labelCoords.clear()
+            self.labelCoords.setText(f'Rendered coords: ')
+            self.gameCoords.setText(f'Game coords: ')
 
     def magic(self):
         print("hello")
