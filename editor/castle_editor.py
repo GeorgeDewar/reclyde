@@ -10,15 +10,24 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.castle_renderer = CastleRenderer(1)
 
         self.image_frame = ViewingPane(self)
+        self.image_frame.coordinatesChanged.connect(self.handleCoords)
+        self.labelCoords = QtWidgets.QLabel(self)
+        # self.labelCoords.setAlignment(
+        #     QtCore.Qt.AlignRight | QtCore.Qt.AlignCenter)
+
         self.button = QtWidgets.QPushButton("Click me!")
 
+        rightMenuLayout = QtWidgets.QWidget()
+        rightMenuLayout.setFixedWidth(250)
         self.rightMenu = QtWidgets.QVBoxLayout()
         self.rightMenu.addWidget(self.button)
         self.rightMenu.addStretch()
+        self.rightMenu.addWidget(self.labelCoords)
+        rightMenuLayout.setLayout(self.rightMenu)
 
         self.layout = QtWidgets.QHBoxLayout()
         self.layout.addWidget(self.image_frame)
-        self.layout.addLayout(self.rightMenu)
+        self.layout.addWidget(rightMenuLayout)
         self.setLayout(self.layout)
 
         self.button.clicked.connect(self.magic)
@@ -28,6 +37,12 @@ class CastleEditorWindow(QtWidgets.QWidget):
         image = self.castle_renderer.render()
         qimage = QtGui.QImage(image.data, image.shape[1], image.shape[0], QtGui.QImage.Format_RGB888).rgbSwapped()
         self.image_frame.setPhoto(QtGui.QPixmap.fromImage(qimage))
+
+    def handleCoords(self, point):
+        if not point.isNull():
+            self.labelCoords.setText(f'Rendered coords: {point.x()}, {point.y()}')
+        else:
+            self.labelCoords.clear()
 
     def magic(self):
         print("hello")
