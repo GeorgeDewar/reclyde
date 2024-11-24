@@ -98,16 +98,16 @@ class CastleEditorWindow(QtWidgets.QWidget):
     def drawOverlays(self):
         img2 = self.image.copy()
 
+        if self.highlightedCell:
+            top_left = np.multiply(self.highlightedCell, 16)
+            color = (0, 0, 0)
+            thickness = 1
+            cv2.rectangle(img2, top_left, np.add(top_left, 16), color, thickness)
+
         # Show selected
         if self.selectedCell:
             top_left = np.multiply(self.selectedCell, 16)
             color = (0, 255, 0)
-            thickness = 1
-            cv2.rectangle(img2, top_left, np.add(top_left, 16), color, thickness)
-
-        if self.highlightedCell:
-            top_left = np.multiply(self.highlightedCell, 16)
-            color = (0, 0, 0)
             thickness = 1
             cv2.rectangle(img2, top_left, np.add(top_left, 16), color, thickness)
         
@@ -119,6 +119,12 @@ class CastleEditorWindow(QtWidgets.QWidget):
         game_y = point.y() // 16
         self.selectedCell = (game_x, game_y)
         self.drawOverlays()
+
+        # Write the labels
+        index = self.selectedCell[1] * 250 + self.selectedCell[0]
+        self.selectedCellItemValue.setText(f"{self.items_data[index]:02x}")
+        self.selectedCellStructureValue.setText(f"{self.structure_data[index]:02x}")
+        self.selectedCellMagicValue.setText(f"{self.magic_data[index]:02x}")
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
