@@ -142,6 +142,7 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.selectedCell = None
 
         self.display_image()
+        self.image_frame.zoom(5)
 
     def display_image(self):
         self.image = self.castle_renderer.render(self.structure_data, self.items_data, self.magic_data)
@@ -213,7 +214,8 @@ if __name__ == "__main__":
 
     widget = CastleEditorWindow()
     widget.setWindowTitle("Clyde's Unofficial Castle Editor")
-    widget.resize(1320, 900)
+    widget.resize(1600, 900)
+    widget.showMaximized()
     widget.show()
 
     sys.exit(app.exec_())

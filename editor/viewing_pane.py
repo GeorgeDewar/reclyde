@@ -27,7 +27,7 @@ class ViewingPane(QtWidgets.QGraphicsView):
     def hasPhoto(self):
         return not self._empty
 
-    def resetView(self, scale=1):
+    def resetView(self, scale=6):
         rect = QtCore.QRectF(self._photo.pixmap().rect())
         if not rect.isNull():
             self.setSceneRect(rect)
@@ -42,7 +42,8 @@ class ViewingPane(QtWidgets.QGraphicsView):
                              viewrect.height() / scenerect.height()) * scale
                 self.scale(factor, factor)
                 if not self.zoomPinned():
-                    self.centerOn(self._photo)
+                    bottom_left = rect.bottomLeft()
+                    self.centerOn(bottom_left)
                 self.updateCoordinates()
 
     def setPhoto(self, pixmap=None):
@@ -70,7 +71,7 @@ class ViewingPane(QtWidgets.QGraphicsView):
                     factor = 1 / SCALE_FACTOR ** abs(step)
                 self.scale(factor, factor)
             else:
-                self.resetView()
+                self.resetView(1)
 
     def wheelEvent(self, event):
         delta = event.angleDelta().y()
