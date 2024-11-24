@@ -27,6 +27,15 @@ available_items = [
 
 RIGHT_MENU_SIZE = 500
 
+class ItemButton(QtWidgets.QLabel):
+    clicked = QtCore.Signal(int)
+
+    def setId(self, id):
+        self.id = id
+    
+    def mousePressEvent(self, event):
+        self.clicked.emit(self.id)
+
 class CastleEditorWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
@@ -37,11 +46,11 @@ class CastleEditorWindow(QtWidgets.QWidget):
 
         # Read the castle data
         with open(castle_structure_filename, "rb") as structure_file:
-            self.structure_data = structure_file.read()
+            self.structure_data = bytearray(structure_file.read())
         with open(castle_items_filename, "rb") as items_file:
-            self.items_data = items_file.read()
+            self.items_data = bytearray(items_file.read())
         with open(castle_magic_filename, "rb") as magic_file:
-            self.magic_data = magic_file.read()
+            self.magic_data = bytearray(magic_file.read())
 
         self.image_frame = ViewingPane(self)
         self.image_frame.coordinatesChanged.connect(self.handleCoords)
@@ -87,23 +96,27 @@ class CastleEditorWindow(QtWidgets.QWidget):
         GRID_SPACING = 5
         self.structureLayout.setSpacing(GRID_SPACING)
         for idx, structure in enumerate(available_structure):
-            label = QtWidgets.QLabel()
+            label = ItemButton()
+            label.setId(structure)
             sprite = self.structure_sprites[structure]
             tileSize = 32
             qimage = QtGui.QImage(sprite.data, sprite.shape[1], sprite.shape[0], QtGui.QImage.Format_RGB888).rgbSwapped().scaled(tileSize, tileSize, QtCore.Qt.AspectRatioMode.KeepAspectRatio)
             label.setPixmap(QtGui.QPixmap.fromImage(qimage))
             num_cols = (RIGHT_MENU_SIZE - 20) // (tileSize + 5)
+            label.clicked.connect(self.structure_selected)
             self.structureLayout.addWidget(label, idx // num_cols, idx % num_cols)
         
         self.itemsLayout = QtWidgets.QGridLayout()
         self.itemsLayout.setSpacing(GRID_SPACING)
         for idx, item in enumerate(available_items):
-            label = QtWidgets.QLabel()
+            label = ItemButton()
+            label.setId(item)
             sprite = self.item_sprites[item]
             tileSize = 32
             qimage = QtGui.QImage(sprite.data, sprite.shape[1], sprite.shape[0], QtGui.QImage.Format_RGB888).rgbSwapped().scaled(tileSize, tileSize, QtCore.Qt.AspectRatioMode.KeepAspectRatio)
             label.setPixmap(QtGui.QPixmap.fromImage(qimage))
             num_cols = (RIGHT_MENU_SIZE - 20) // (tileSize + 5)
+            label.clicked.connect(self.item_selected)
             self.itemsLayout.addWidget(label, idx // num_cols, idx % num_cols)
 
         rightMenuLayout = QtWidgets.QWidget()
@@ -125,15 +138,16 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.layout.addWidget(rightMenuLayout)
         self.setLayout(self.layout)
 
-        self.display_image()
-
         self.highlightedCell = None
         self.selectedCell = None
+
+        self.display_image()
 
     def display_image(self):
         self.image = self.castle_renderer.render(self.structure_data, self.items_data, self.magic_data)
         qimage = QtGui.QImage(self.image.data, self.image.shape[1], self.image.shape[0], QtGui.QImage.Format_RGB888).rgbSwapped()
         self.image_frame.setPhoto(QtGui.QPixmap.fromImage(qimage))
+        self.drawOverlays()
 
     def handleCoords(self, point):
         if not point.isNull():
@@ -178,6 +192,21 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.selectedCellItemValue.setText(f"{self.items_data[index]:02x}")
         self.selectedCellStructureValue.setText(f"{self.structure_data[index]:02x}")
         self.selectedCellMagicValue.setText(f"{self.magic_data[index]:02x}")
+
+    def structure_selected(self, id):
+        index = self.selectedCell[1] * 250 + self.selectedCell[0]
+        self.structure_data[index] = id
+        self.display_image()
+    
+    def item_selected(self, id):
+        index = self.selectedCell[1] * 250 + self.selectedCell[0]
+        self.items_data[index] = id
+        self.display_image()
+
+    def magic_selected(self, id):
+        index = self.selectedCell[1] * 250 + self.selectedCell[0]
+        self.magic_data[index] = id
+        self.display_image()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
