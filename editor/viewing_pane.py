@@ -3,6 +3,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 SCALE_FACTOR = 1.25
 
 class ViewingPane(QtWidgets.QGraphicsView):
+    clicked = QtCore.Signal(QtCore.QPoint)
     coordinatesChanged = QtCore.Signal(QtCore.QPoint)
 
     def __init__(self, parent):
@@ -109,3 +110,14 @@ class ViewingPane(QtWidgets.QGraphicsView):
     def leaveEvent(self, event):
         self.coordinatesChanged.emit(QtCore.QPoint())
         super().leaveEvent(event)
+    
+    def mousePressEvent(self, event):
+        pos = event.pos()
+        if self._photo.isUnderMouse():
+            if pos is None:
+                pos = self.mapFromGlobal(QtGui.QCursor.pos())
+            point = self.mapToScene(pos).toPoint()
+        else:
+            point = QtCore.QPoint()
+        self.clicked.emit(point)
+        return super().mousePressEvent(event)

@@ -13,6 +13,7 @@ class CastleEditorWindow(QtWidgets.QWidget):
 
         self.image_frame = ViewingPane(self)
         self.image_frame.coordinatesChanged.connect(self.handleCoords)
+        self.image_frame.clicked.connect(self.paneClicked)
         self.labelCoords = QtWidgets.QLabel(self)
         self.gameCoords = QtWidgets.QLabel(self)
         # self.labelCoords.setAlignment(
@@ -37,6 +38,9 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.button.clicked.connect(self.magic)
         self.display_image()
 
+        self.highlightedCell = None
+        self.selectedCell = None
+
     def display_image(self):
         self.image = self.castle_renderer.render()
         qimage = QtGui.QImage(self.image.data, self.image.shape[1], self.image.shape[0], QtGui.QImage.Format_RGB888).rgbSwapped()
@@ -49,23 +53,36 @@ class CastleEditorWindow(QtWidgets.QWidget):
             game_y = point.y() // 16
             self.gameCoords.setText(f'Game coords: {game_x}, {game_y}')
 
-            # Show highlight
-            highlight = (game_x, game_y)
-            
-            top_left = np.multiply(highlight, 16)
-            # Blue color in BGR
-            color = (255, 0, 0)
-
-            # Line thickness of 2 px
-            thickness = 2
-
-            img2 = self.image.copy()
-            cv2.rectangle(img2, top_left, np.add(top_left, 16), color, thickness)
-            qimage = QtGui.QImage(img2.data, img2.shape[1], img2.shape[0], QtGui.QImage.Format_RGB888).rgbSwapped()
-            self.image_frame.setPhoto(QtGui.QPixmap.fromImage(qimage))
+            self.highlightedCell = (game_x, game_y)
+            self.drawOverlays()
         else:
             self.labelCoords.setText(f'Rendered coords: ')
             self.gameCoords.setText(f'Game coords: ')
+
+    def drawOverlays(self):
+        img2 = self.image.copy()
+
+        # Show selected
+        if self.selectedCell:
+            top_left = np.multiply(self.selectedCell, 16)
+            color = (0, 255, 0)
+            thickness = 1
+            cv2.rectangle(img2, top_left, np.add(top_left, 16), color, thickness)
+
+        if self.highlightedCell:
+            top_left = np.multiply(self.highlightedCell, 16)
+            color = (0, 0, 0)
+            thickness = 1
+            cv2.rectangle(img2, top_left, np.add(top_left, 16), color, thickness)
+        
+        qimage = QtGui.QImage(img2.data, img2.shape[1], img2.shape[0], QtGui.QImage.Format_RGB888).rgbSwapped()
+        self.image_frame.setPhoto(QtGui.QPixmap.fromImage(qimage))
+
+    def paneClicked(self, point):
+        game_x = point.x() // 16
+        game_y = point.y() // 16
+        self.selectedCell = (game_x, game_y)
+        self.drawOverlays()
 
     def magic(self):
         print("hello")
