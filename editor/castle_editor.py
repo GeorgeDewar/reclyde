@@ -16,15 +16,38 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.image_frame.clicked.connect(self.paneClicked)
         self.labelCoords = QtWidgets.QLabel(self)
         self.gameCoords = QtWidgets.QLabel(self)
-        # self.labelCoords.setAlignment(
-        #     QtCore.Qt.AlignRight | QtCore.Qt.AlignCenter)
 
-        self.button = QtWidgets.QPushButton("Click me!")
+        # Selected cell information
+        self.selectedCellLabel = QtWidgets.QLabel(self, text = "Selected cell")
+        
+        self.selectedCellItemLabel = QtWidgets.QLabel(self, text = "Item")
+        self.selectedCellItemValue = QtWidgets.QLabel(self)
+        self.selectedCellItemLayout = QtWidgets.QVBoxLayout()
+        self.selectedCellItemLayout.addWidget(self.selectedCellItemLabel)
+        self.selectedCellItemLayout.addWidget(self.selectedCellItemValue)
+        
+        self.selectedCellStructureLabel = QtWidgets.QLabel(self, text = "Structure")
+        self.selectedCellStructureValue = QtWidgets.QLabel(self)
+        self.selectedCellStructureLayout = QtWidgets.QVBoxLayout()
+        self.selectedCellStructureLayout.addWidget(self.selectedCellStructureLabel)
+        self.selectedCellStructureLayout.addWidget(self.selectedCellStructureValue)
+
+        self.selectedCellMagicLabel = QtWidgets.QLabel(self, text = "Magic")
+        self.selectedCellMagicValue = QtWidgets.QLabel(self)
+        self.selectedCellMagicLayout = QtWidgets.QVBoxLayout()
+        self.selectedCellMagicLayout.addWidget(self.selectedCellMagicLabel)
+        self.selectedCellMagicLayout.addWidget(self.selectedCellMagicValue)
+
+        self.selectedCellInfoLayout = QtWidgets.QHBoxLayout()
+        self.selectedCellInfoLayout.addLayout(self.selectedCellItemLayout)
+        self.selectedCellInfoLayout.addLayout(self.selectedCellStructureLayout)
+        self.selectedCellInfoLayout.addLayout(self.selectedCellMagicLayout)
 
         rightMenuLayout = QtWidgets.QWidget()
         rightMenuLayout.setFixedWidth(250)
         self.rightMenu = QtWidgets.QVBoxLayout()
-        self.rightMenu.addWidget(self.button)
+        self.rightMenu.addWidget(self.selectedCellLabel)
+        self.rightMenu.addLayout(self.selectedCellInfoLayout)
         self.rightMenu.addStretch()
         self.rightMenu.addWidget(self.gameCoords)
         self.rightMenu.addWidget(self.labelCoords)
@@ -35,7 +58,6 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.layout.addWidget(rightMenuLayout)
         self.setLayout(self.layout)
 
-        self.button.clicked.connect(self.magic)
         self.display_image()
 
         self.highlightedCell = None
@@ -83,10 +105,6 @@ class CastleEditorWindow(QtWidgets.QWidget):
         game_y = point.y() // 16
         self.selectedCell = (game_x, game_y)
         self.drawOverlays()
-
-    def magic(self):
-        print("hello")
-        self.display_image()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])

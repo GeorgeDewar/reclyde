@@ -46,17 +46,9 @@ class ViewingPane(QtWidgets.QGraphicsView):
                 self.updateCoordinates()
 
     def setPhoto(self, pixmap=None):
-        if pixmap and not pixmap.isNull():
-            self._empty = False
-            self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
-            self._photo.setPixmap(pixmap)
-        else:
-            self._empty = True
-            self.setDragMode(QtWidgets.QGraphicsView.NoDrag)
-            self._photo.setPixmap(QtGui.QPixmap())
-        if not (self.zoomPinned() and self.hasPhoto()):
-            self._zoom = 0
-        #self.resetView(SCALE_FACTOR ** self._zoom)
+        self._empty = False
+        self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
+        self._photo.setPixmap(pixmap)
 
     def zoomLevel(self):
         return self._zoom
