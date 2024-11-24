@@ -30,11 +30,7 @@ output_width=blocks_width*block_width
 HOME=".."
 
 class CastleRenderer:
-    def __init__(self, castle_num):
-        castle_structure_filename = f"{HOME}/extracted/volume4_castles/castle{castle_num}_structure.bin"
-        castle_items_filename = f"{HOME}/extracted/volume4_castles/castle{castle_num}_items.bin"
-        castle_magic_filename = f"{HOME}/extracted/volume4_castles/castle{castle_num}_magic.bin"
-
+    def __init__(self):
         self.structure_sprites = {}
         for i in range(240):
             self.structure_sprites[i] = cv2.imread(f"{HOME}/extracted/images/structure/{i:02x}.png")
@@ -42,21 +38,8 @@ class CastleRenderer:
         self.item_sprites = {}
         for i in range(240):
             self.item_sprites[i] = cv2.imread(f"{HOME}/extracted/images/items/{i:02x}.png")
-    
-        # Read the castle data
-        with open(castle_structure_filename, "rb") as structure_file:
-            self.structure_data = structure_file.read()
-        with open(castle_items_filename, "rb") as items_file:
-            self.items_data = items_file.read()
-        with open(castle_magic_filename, "rb") as magic_file:
-            self.magic_data = magic_file.read()
 
-    def render(self):
-        # Might make these be passed to render
-        structure_data = self.structure_data
-        items_data = self.items_data
-        magic_data = self.magic_data
-
+    def render(self, structure_data, items_data, magic_data):
         # Keep track of where we are - same index for all three files
         input_idx = 0
 

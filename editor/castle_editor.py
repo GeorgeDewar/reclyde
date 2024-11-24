@@ -6,10 +6,24 @@ from viewing_pane import ViewingPane
 import cv2
 import numpy as np
 
+HOME=".."
+castle_num = 1
+
 class CastleEditorWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.castle_renderer = CastleRenderer(1)
+        self.castle_renderer = CastleRenderer()
+        castle_structure_filename = f"{HOME}/extracted/volume4_castles/castle{castle_num}_structure.bin"
+        castle_items_filename = f"{HOME}/extracted/volume4_castles/castle{castle_num}_items.bin"
+        castle_magic_filename = f"{HOME}/extracted/volume4_castles/castle{castle_num}_magic.bin"
+
+        # Read the castle data
+        with open(castle_structure_filename, "rb") as structure_file:
+            self.structure_data = structure_file.read()
+        with open(castle_items_filename, "rb") as items_file:
+            self.items_data = items_file.read()
+        with open(castle_magic_filename, "rb") as magic_file:
+            self.magic_data = magic_file.read()
 
         self.image_frame = ViewingPane(self)
         self.image_frame.coordinatesChanged.connect(self.handleCoords)
@@ -64,7 +78,7 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.selectedCell = None
 
     def display_image(self):
-        self.image = self.castle_renderer.render()
+        self.image = self.castle_renderer.render(self.structure_data, self.items_data, self.magic_data)
         qimage = QtGui.QImage(self.image.data, self.image.shape[1], self.image.shape[0], QtGui.QImage.Format_RGB888).rgbSwapped()
         self.image_frame.setPhoto(QtGui.QPixmap.fromImage(qimage))
 
