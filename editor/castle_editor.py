@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 
 HOME=".."
-castle_num = 1
+castle_num = 3
 
 # Define structures as 0-199, minus certain ranges of animation sprites
 available_structure = range(200)
@@ -57,6 +57,8 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.image_frame.clicked.connect(self.paneClicked)
         self.labelCoords = QtWidgets.QLabel(self)
         self.gameCoords = QtWidgets.QLabel(self)
+
+        self.numberOfGemsValue = QtWidgets.QLabel()
 
         # Selected cell information
         self.selectedCellLabel = QtWidgets.QLabel(self, text = "Selected cell")
@@ -122,6 +124,7 @@ class CastleEditorWindow(QtWidgets.QWidget):
         rightMenuLayout = QtWidgets.QWidget()
         rightMenuLayout.setFixedWidth(RIGHT_MENU_SIZE)
         self.rightMenu = QtWidgets.QVBoxLayout()
+        self.rightMenu.addWidget(self.numberOfGemsValue)
         self.rightMenu.addWidget(self.selectedCellLabel)
         self.rightMenu.addLayout(self.selectedCellInfoLayout)
         self.rightMenu.addWidget(QtWidgets.QLabel(text = "Structure:"))
@@ -194,20 +197,27 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.selectedCellStructureValue.setText(f"{self.structure_data[index]:02x}")
         self.selectedCellMagicValue.setText(f"{self.magic_data[index]:02x}")
 
+    def update_castle_stats(self):
+        num_gems = sum(1 for v in self.items_data if v == 0x3B)
+        self.numberOfGemsValue.setText(f"{num_gems}")
+
     def structure_selected(self, id):
         index = self.selectedCell[1] * 250 + self.selectedCell[0]
         self.structure_data[index] = id
         self.display_image()
+        self.update_castle_stats()
     
     def item_selected(self, id):
         index = self.selectedCell[1] * 250 + self.selectedCell[0]
         self.items_data[index] = id
         self.display_image()
+        self.update_castle_stats()
 
     def magic_selected(self, id):
         index = self.selectedCell[1] * 250 + self.selectedCell[0]
         self.magic_data[index] = id
         self.display_image()
+        self.update_castle_stats()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
