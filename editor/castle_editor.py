@@ -143,6 +143,7 @@ class CastleEditorWindow(QtWidgets.QWidget):
 
         self.highlightedCell = None
         self.selectedCell = None
+        self.ctrl_pressed = False
 
         self.display_image()
         self.image_frame.zoom(5)
@@ -185,11 +186,28 @@ class CastleEditorWindow(QtWidgets.QWidget):
         qimage = QtGui.QImage(img2.data, img2.shape[1], img2.shape[0], QtGui.QImage.Format_RGB888).rgbSwapped()
         self.image_frame.setPhoto(QtGui.QPixmap.fromImage(qimage))
 
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Control:
+            self.ctrl_pressed = True
+        return super().keyPressEvent(event)
+
+    def keyReleaseEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Control:
+            self.ctrl_pressed = False
+        return super().keyReleaseEvent(event)
+
     def paneClicked(self, point):
         game_x = point.x() // 16
         game_y = point.y() // 16
+        previous_cell = self.selectedCell
         self.selectedCell = (game_x, game_y)
         self.drawOverlays()
+
+        # If Ctrl is down, copy item value from previous cell
+        if self.ctrl_pressed and previous_cell:
+            previous_index = previous_cell[1] * 250 + previous_cell[0]
+            # Temporary - repeat item value
+            self.item_selected(self.items_data[previous_index])
 
         # Write the labels
         index = self.selectedCell[1] * 250 + self.selectedCell[0]
