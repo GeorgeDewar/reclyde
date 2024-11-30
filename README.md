@@ -35,7 +35,7 @@ Decode the data files well enough to be able to produce a static image mapping e
 
 Filename     | Contents
 ------------ | --------
-VOLUME_1.CA1 | Save data
+VOLUME_1.CA1 | Save data, settings and font glyphs
 VOLUME_2.CA1 | Character sprites
 VOLUME_3.CA1 | Castle sprites - structure (e.g. walls) and items (e.g. gems)
 VOLUME_4.CA1 | Castle data - three compressed files per castle
