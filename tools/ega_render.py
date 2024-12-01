@@ -1,5 +1,6 @@
 import numpy as np
 from PIL import Image
+import sys
 
 # Map EGA palette (16 colors) to RGB
 ega_palette = [
@@ -23,7 +24,7 @@ ega_palette = [
 
 # Render binary video memory data for mode 0x0D (320x200x16) to an image
 def ega_render_mode_0x0D(video_memory):
-    width, height = 320, 200
+    width, height = 320, 800
     bytes_per_row = width // 8  # Each byte covers 8 pixels
 
     # Prepare a blank image
@@ -76,3 +77,6 @@ def ega_render(input_filename, output_filename):
     # Save the image
     img = Image.fromarray(rgb_image)
     img.save(output_filename)
+
+if __name__ == "__main__":
+    ega_render(sys.argv[1], sys.argv[2])
