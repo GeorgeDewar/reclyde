@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 
 HOME=".."
-castle_num = 3
+castle_num = 1
 
 # Define structures as 0-199, minus certain ranges of animation sprites
 available_structure = range(200)
@@ -40,16 +40,16 @@ class CastleEditorWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.castle_renderer = CastleRenderer()
-        castle_structure_filename = f"{HOME}/extracted/volume4_castles/castle{castle_num}_structure.bin"
-        castle_items_filename = f"{HOME}/extracted/volume4_castles/castle{castle_num}_items.bin"
-        castle_magic_filename = f"{HOME}/extracted/volume4_castles/castle{castle_num}_magic.bin"
+        self.castle_structure_filename = f"{HOME}/extracted/volume4_castles/castle{castle_num}_structure.bin"
+        self.castle_items_filename = f"{HOME}/extracted/volume4_castles/castle{castle_num}_items.bin"
+        self.castle_magic_filename = f"{HOME}/extracted/volume4_castles/castle{castle_num}_magic.bin"
 
         # Read the castle data
-        with open(castle_structure_filename, "rb") as structure_file:
+        with open(self.castle_structure_filename, "rb") as structure_file:
             self.structure_data = bytearray(structure_file.read())
-        with open(castle_items_filename, "rb") as items_file:
+        with open(self.castle_items_filename, "rb") as items_file:
             self.items_data = bytearray(items_file.read())
-        with open(castle_magic_filename, "rb") as magic_file:
+        with open(self.castle_magic_filename, "rb") as magic_file:
             self.magic_data = bytearray(magic_file.read())
 
         self.image_frame = ViewingPane(self)
@@ -121,6 +121,10 @@ class CastleEditorWindow(QtWidgets.QWidget):
             label.clicked.connect(self.item_selected)
             self.itemsLayout.addWidget(label, idx // num_cols, idx % num_cols)
 
+        self.saveButton = QtWidgets.QPushButton()
+        self.saveButton.setText("Save")
+        self.saveButton.clicked.connect(self.save)
+
         rightMenuLayout = QtWidgets.QWidget()
         rightMenuLayout.setFixedWidth(RIGHT_MENU_SIZE)
         self.rightMenu = QtWidgets.QVBoxLayout()
@@ -132,6 +136,7 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.rightMenu.addWidget(QtWidgets.QLabel(text = "Items:"))
         self.rightMenu.addLayout(self.itemsLayout)
         self.rightMenu.addStretch()
+        self.rightMenu.addWidget(self.saveButton)
         self.rightMenu.addWidget(self.gameCoords)
         self.rightMenu.addWidget(self.labelCoords)
         rightMenuLayout.setLayout(self.rightMenu)
@@ -236,6 +241,16 @@ class CastleEditorWindow(QtWidgets.QWidget):
         self.magic_data[index] = id
         self.display_image()
         self.update_castle_stats()
+    
+    def save(self):
+        with open(self.castle_structure_filename, "wb") as structure_file:
+            structure_file.write(self.structure_data)
+        with open(self.castle_items_filename, "wb") as items_file:
+            items_file.write(self.items_data)
+        with open(self.castle_magic_filename, "wb") as magic_file:
+            magic_file.write(self.magic_data)
+
+        pass
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
